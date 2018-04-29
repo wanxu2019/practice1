@@ -1,0 +1,93 @@
+/*a  upload */
+.a-upload {
+    padding: 4px 10px;
+    height: 20px; 
+    line-height: 20px;
+    position: relative;
+    cursor: pointer;
+    color: #888;
+    background: #fafafa;
+    border: 2px solid #ddd;
+    border-radius: 4px; 
+    overflow: hidden;
+
+    *display: inline;
+    *zoom: 1
+}
+.a_upload {
+   /*  padding: 4px 10px;
+    height: 20px; */
+    line-height: 20px;
+    position: relative;
+    cursor: pointer;
+    color: #888;
+    background: #fafafa;
+    border: 1px solid #ddd;
+   /*  border-radius: 4px; */
+    overflow: hidden;
+
+    *display: inline;
+    *zoom: 1
+}
+
+.a-upload  input {
+    position: absolute;
+    right: 0;
+    top: 0;
+    opacity: 0;
+    filter: alpha(opacity=0);
+    cursor: pointer
+}
+
+.a-upload:hover {
+    color: #444;
+    background: #eee;
+    border-color: #ccc;
+    text-decoration: none
+}
+
+.uploadbtn {
+   	padding: 4px 10px;
+    height: 28px;
+    line-height: 0px; 
+    position: relative;
+    cursor: pointer;
+    color: #888;
+    background: #fafafa;
+    border: 2px solid #ddd;
+   	border-radius: 4px; 
+    overflow: hidden;
+
+    *display: inline;
+    *zoom: 1
+}
+.upload_btn {
+   /*  padding: 4px 10px;
+    height: 28px;
+    line-height: 0px; */
+    position: relative;
+    cursor: pointer;
+    color: #888;
+    background: #fafafa;
+    border: 1px solid #ddd;
+   /*  border-radius: 4px; */
+    overflow: hidden;
+
+    *display: inline;
+    *zoom: 1
+}
+.a_upload  input {
+    position: absolute;
+    right: 0;
+    top: 0;
+    opacity: 0;
+    filter: alpha(opacity=0);
+    cursor: pointer
+}
+
+.a_upload:hover {
+    color: #444;
+    background: #eee;
+    border-color: #ccc;
+    text-decoration: none
+}
