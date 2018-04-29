@@ -91,10 +91,10 @@
     <div id="myCustomTab">
         <div class="tab-pane active" id="abc">
             <div id="mainBtnGroup" class="btn-group btn-group-sm">
-                <a type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal"">
+                <a type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal" onclick="showAddElementPanel()">
                     <i class="glyphicon glyphicon-plus"></i> 添加
                 </a>
-                <a type="button" class="btn btn-info" style="margin-right: 40px" onclick="deleterow()">
+                <a type="button" class="btn btn-info" style="margin-right: 40px" onclick="delElements()">
                     <i class="glyphicon glyphicon-trash"></i> 删除
                 </a>
 
@@ -134,15 +134,29 @@
                         </tr>
                     </table>
 
-                        <table id="showTable222">
-                            <thead>
-                            <tr>
-                                <th data-field="name">问题</th>
-                                <th data-field="num">数量</th>
-                            </tr>
-                            </thead>
-                        </table>
-
+                        <div id="showTableWrapper" style="display:none;">
+                            <table id="showTable"
+                                   data-height=750
+                                   data-toggle="table"
+                                   data-search="true"
+                                   data-show-refresh="true"
+                                   data-show-toggle="true"
+                                   data-toolbar="#toolbar"
+                                   data-pagination="true"
+                                   data-page-size=30
+                                   data-page-list=[10,30,50,All]
+                                   data-side-pagination="client"
+                                    >
+                                <thead>
+                                <tr>
+                                    <th data-field="state" data-checkbox="true"></th>
+                                    <th data-field="name">问题</th>
+                                    <th data-field="num">数量</th>
+                                    <th data-field="id" data-formatter="editFormatter">编辑</th>
+                                </tr>
+                                </thead>
+                            </table>
+                        </div>
                     <%--展示表格End--%>
                         <%--导出Table--%>
                         <table id="exportTable" style="display:none">
@@ -175,6 +189,7 @@
                                 <h4 class="modal-title" id="myModalLabel">添加问题</h4>
                             </div>
                             <div class="modal-body">
+                                <input id="input_problem_id" style="display: none">
                                 <label>问题名称：</label>
                                 <input id="input_problem_name" class="form-control" placeholder="请输入问题名称" >
                                 <label>问题数量：</label>
@@ -182,7 +197,8 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                                <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="javascript:addElement()">添加</button>
+                                <button id="btnAdd" type="button" class="btn btn-primary" data-dismiss="modal" onclick="javascript:addElement()">添加</button>
+                                <button id="btnEdit" type="button" class="btn btn-primary" data-dismiss="modal" onclick="javascript:editElement()">更改</button>
                             </div>
                         </div>
                     </div>
@@ -217,23 +233,13 @@
 </div>
 </body>
 <script type="text/javascript">
-    function stateFormatter(value, row, index) {
-
+    function editFormatter(value, row, index, field) {
+        console.log("value:"+value);
+        console.log("row:"+row);
+        console.log("index:"+index);
+        console.log("field:"+field);
+        return "<a class=\"edit ml10\" href=\"javascript:showEditElementPanel("+value+")\" title=\"Edit\"><i class=\"glyphicon glyphicon-edit\"></i> 编辑</a>";
     }
-    function opFormmatter(value,row,index){
-
-    }
-    var table=$("#showTable222");
-    table.bootstrapTable({
-        data:problems,
-        search:"true",
-        showRefresh:"true",
-        showToggle:"true",
-        pageList: [10, 25, 50, 100],
-        pageSize:20,
-        sidePagination: "client"
-    });
-
 //    $('#table').bootstrapTable({
 //        url: 'Servlet',         //请求后台的URL（*）
 //        method: 'get',                      //请求方式（*）

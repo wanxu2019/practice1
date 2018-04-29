@@ -408,16 +408,28 @@ function loadDataFromExcel(data){
 }
 var vueObject;
 function displayDataInTable(){
-    if(vueObject!=null){
-        if($("#showTable").css("display")=="none"){
-            $("#showTable").css("display","");
+    //Vue的方式
+    //if(vueObject!=null){
+    //    if($("#showTable").css("display")=="none"){
+    //        $("#showTable").css("display","");
+    //    }
+    //    for(var i=0;i<vueObject.problems.length;){
+    //        vueObject.problems.pop();
+    //    }
+    //    for(i=0;i<problems.length;i++){
+    //        vueObject.problems.push(problems[i]);
+    //    }
+    //}
+    //BootStrap Table的方式
+    var showTableWrapper=$("#showTableWrapper");
+    var showTable=$("#showTable");
+    if(problems.length==0){
+        showTableWrapper.css("display","none");
+    }else{
+        if(showTableWrapper.css("display")=="none"){
+            showTableWrapper.css("display","");
         }
-        for(var i=0;i<vueObject.problems.length;){
-            vueObject.problems.pop();
-        }
-        for(i=0;i<problems.length;i++){
-            vueObject.problems.push(problems[i]);
-        }
+        showTable.bootstrapTable("load",problems);
     }
 }
 function displayDataInPareto(){
@@ -472,7 +484,7 @@ function getSerializableData(){
 }
 //隐藏显示元素
 function hideDisplayElements(){
-    $("#showTable").css("display","none");
+    $("#showTableWrapper").css("display","none");
     $("#paretoDiv").css("display","none");
 }
 //添加元素
@@ -497,7 +509,8 @@ function addElement(){
     problems.push({
         "id":max_id,
         "name":name,
-        "num":num
+        "num":num,
+        "state":false
     });
     displayDataInTable();
     displayDataInPareto();
@@ -505,19 +518,8 @@ function addElement(){
     $("#input_problem_name").val("");
     $("#input_problem_num").val("");
 }
-//删除元素
-function delElement(node){
-    //console.log("del"+$(node).parents("tr").children("td.id").html());
-    var id=parseInt($(node).parents("tr").children("td.id").html());
-    //遍历找出index
-    var index=0;
-    for(;index<problems.length;index++){
-        if(problems[index].id==id){
-            break;
-        }
-    }
-    //删除index的元素
-    problems.splice(index,1);
+//重新绘制表格与图像
+function reDisplay(){
     //删除之后重绘表格
     displayDataInTable();
     //删除之后柏拉图也需要重绘
@@ -526,6 +528,83 @@ function delElement(node){
     if(problems.length==0){
         hideDisplayElements();
     }
+}
+//根据Id找出index
+function getIndexById(id){
+    //遍历找出index
+    var index=0;
+    for(;index<problems.length;index++){
+        if(problems[index].id==id){
+            break;
+        }
+    }
+    return index;
+}
+//根据id删除元素
+function delDataById(id){
+    var index=getIndexById(id);
+    //删除index的元素
+    problems.splice(index,1);
+}
+//删除元素
+function delElement(node){
+    //console.log("del"+$(node).parents("tr").children("td.id").html());
+    var id=parseInt($(node).parents("tr").children("td.id").html());
+    delDataById(id);
+    reDisplay();
+}
+//批量删除元素
+function delElements(){
+    var elements=$("#showTable").bootstrapTable("getSelections");
+    for(var i=0;i<elements.length;i++){
+        delDataById(parseInt(elements[i].id));
+    }
+    reDisplay();
+}
+function showAddElementPanel(){
+    console.log("添加：");
+    $("#myModalLabel").html("添加问题");
+    $("#btnAdd").css("display","");
+    $("#btnEdit").css("display","none");
+}
+//显示编辑元素面板
+function showEditElementPanel(id){
+    $("#myModalLabel").html("编辑问题");
+    $("#btnAdd").css("display","none");
+    $("#btnEdit").css("display","");
+    var index=getIndexById(parseInt(id));
+    $("#input_problem_id").val(problems[index].id);
+    $("#input_problem_name").val(problems[index].name);
+    $("#input_problem_num").val(problems[index].num);
+    $("#myModal").modal();
+    //console.log("edit:"+id);
+}
+//编辑元素
+function editElement(){
+    var id=parseInt($("#input_problem_id").val());
+    var index=getIndexById(parseInt(id));
+    var name=$("#input_problem_name").val().trim();
+    var num=$("#input_problem_num").val().trim();
+    if(name==""||num==""){
+        alert("问题名称与数量不可为空，请检查后重新输入");
+        return ;
+    }
+    try{
+        num=parseInt(num);
+    }catch(e){
+        alert("问题数量不符合规范，请检查后重新输入");
+        return ;
+    }
+    if(isNaN(num)||num<=0){
+        alert("问题数量不符合规范，请检查后重新输入");
+        return ;
+    }
+    problems[index].name=name;
+    problems[index].num=num;
+    //编辑完成之后清除掉已输入的数据
+    $("#input_problem_name").val("");
+    $("#input_problem_num").val("");
+    reDisplay();
 }
 function saveToFile(){
     if(problems.length==0){
