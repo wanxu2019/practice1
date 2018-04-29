@@ -17,7 +17,7 @@
     <!--bootstrapTable-->
     <link rel="stylesheet" href="http://innovation.xjtu.edu.cn/webresources/ace-master/assets/css/bootstrap.min.css">
     <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="http://innovation.xjtu.edu.cn/webresources/bootstrap/bootstrap-table/bootstrap-table.min.css">
+    <link rel="stylesheet" href="./static/dependencies/bootstraptable/bootstrap-table.css">
     <link rel="import" id="frame" href="/webresources/common/html/appFrame.html">
     <style>
         .file {
@@ -41,11 +41,6 @@
             text-decoration: none;
         }
 
-        table input {
-            width: 75%;
-            height:30px;
-            margin-bottom:5px;
-        }
 
         .main-content {
             margin-left: 0px;
@@ -58,9 +53,7 @@
         .modal-dialog{
             width:40%;
         }
-        tr td{
-            vertical-align: middle!important;
-        }
+
     </style>
     <script type="text/javascript" src="js/buttonAction.js"></script>
     <script src="assets/js/spin.min.js"></script>
@@ -82,9 +75,9 @@
 
     <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
     <!-- Latest compiled and minified JavaScript -->
-    <script src="http://innovation.xjtu.edu.cn/webresources/bootstrap/bootstrap-table/bootstrap-table.min.js"></script>
+    <script src="./static/dependencies/bootstraptable/bootstrap-table.js"></script>
     <!-- Latest compiled and minified Locales -->
-    <script src="http://innovation.xjtu.edu.cn/webresources/bootstrap/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+    <script src="./static/dependencies/bootstraptable/bootstrap-table-zh-CN.js"></script>
 
 </head>
 <body class="no-skin">
@@ -98,15 +91,19 @@
     <div id="myCustomTab">
         <div class="tab-pane active" id="abc">
             <div id="mainBtnGroup" class="btn-group btn-group-sm">
+                <a type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal"">
+                    <i class="glyphicon glyphicon-plus"></i> 添加
+                </a>
+                <a type="button" class="btn btn-info" style="margin-right: 40px" onclick="deleterow()">
+                    <i class="glyphicon glyphicon-trash"></i> 删除
+                </a>
+
                 <a type="button" class="btn btn-info"  href="template/pareto_template.xls">
                     <span class="menu-icon fa fa-download"></span>下载模板
                 </a>
                 <a type="button" class="btn btn-info file">
                     <span class="glyphicon glyphicon-upload"></span>文件导入
                     <input class="" id="xlf" type="file" name="xlfile"/>
-                </a>
-                <a type="button" class="btn btn-info"  data-toggle="modal" data-target="#myModal">
-                    <span class="glyphicon glyphicon-plus"></span>添加数据
                 </a>
                 <a type="button" class="btn btn-info" id="btnSaveAsPicture">
                     <span class="glyphicon glyphicon-ok"></span>保存图片
@@ -123,7 +120,7 @@
             <div id="print" class="row" style="margin-top: 20px;">
                 <div id="app" class="col-sm-6">
                     <%--展示表格--%>
-                    <table id="showTable" class="table" style="text-align: center;font-size: 16px;display: none">
+                    <table id="showTable_backup" class="table" style="text-align: center;font-size: 16px;display: none">
                         <tr>
                             <td>问题</td>
                             <td>数量</td>
@@ -136,31 +133,14 @@
                             <td><button class="btn btn-sm btn-danger" onclick="javascript:delElement(this);">删除</button></td>
                         </tr>
                     </table>
-                        <div id="toolbar" class="btn-group">
-                            <button id="btn_add" class="btn btn-default" onclick="queryPath()">
-                                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>新增
-                            </button>
-                        </div>
-                        <table id="table"
-                               data-toggle="table"
-                               data-height="460"
-                               data-click-to-select="true"
-                               >
+
+                        <table id="showTable222">
                             <thead>
                             <tr>
-                                <th data-field="state" data-checkbox="true"
-                                    data-formatter="stateFormatter"></th>
-                                <th>问题</th>
-                                <th>数量</th>
+                                <th data-field="name">问题</th>
+                                <th data-field="num">数量</th>
                             </tr>
                             </thead>
-                            <tbody>
-                                <tr v-for="problem in problems">
-                                    <td class="bs-checkbox "><input data-index="{{problem.id}}" name="btSelectItem" type="checkbox"></td>
-                                    <td>{{problem.name}}</td>
-                                    <td>{{problem.num}}</td>
-                                </tr>
-                            </tbody>
                         </table>
 
                     <%--展示表格End--%>
@@ -238,19 +218,22 @@
 </body>
 <script type="text/javascript">
     function stateFormatter(value, row, index) {
-        if (index === 2) {
-            return {
-                disabled: true
-            };
-        }
-        if (index === 5) {
-            return {
-                disabled: true,
-                checked: true
-            }
-        }
-        return value;
+
     }
+    function opFormmatter(value,row,index){
+
+    }
+    var table=$("#showTable222");
+    table.bootstrapTable({
+        data:problems,
+        search:"true",
+        showRefresh:"true",
+        showToggle:"true",
+        pageList: [10, 25, 50, 100],
+        pageSize:20,
+        sidePagination: "client"
+    });
+
 //    $('#table').bootstrapTable({
 //        url: 'Servlet',         //请求后台的URL（*）
 //        method: 'get',                      //请求方式（*）
