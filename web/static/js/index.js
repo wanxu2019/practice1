@@ -566,6 +566,9 @@ function showAddElementPanel(){
     $("#myModalLabel").html("添加问题");
     $("#btnAdd").css("display","");
     $("#btnEdit").css("display","none");
+    //添加之前清除掉已输入的数据
+    $("#input_problem_name").val("");
+    $("#input_problem_num").val("");
 }
 //显示编辑元素面板
 function showEditElementPanel(id){

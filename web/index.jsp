@@ -51,7 +51,7 @@
             margin-right: auto;
         }
         .modal-dialog{
-            width:40%;
+            width:60%;
         }
 
     </style>
@@ -136,7 +136,7 @@
 
                         <div id="showTableWrapper" style="display:none;">
                             <table id="showTable"
-                                   data-height=750
+                                   data-height=550
                                    data-toggle="table"
                                    data-search="true"
                                    data-show-refresh="true"
@@ -220,13 +220,32 @@
         <div class="helpClass">
             <p class="helpP">
                 <i class="ace-icon fa fa-check green"></i>
-                欢迎使用<strong class="green">App</strong>, 使用流程如下：<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;1、首先*****<br>
-                截图<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;2、其次*****<br>
-                截图<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;3、最后*****<br>
-                截图<br>
+                欢迎使用<strong class="green">柏拉图 App</strong>,本应用为柏拉图快速在线绘制工具，可供匿名用户和登陆用户使用，以下以登陆用户为例介绍应用的使用流程，使用流程如下：<br>
+                <strong>1、用户登陆</strong><br>
+                &nbsp;&nbsp;&nbsp;&nbsp;输入应用地址打开应用页面后，如未使用过其他应用默认为匿名用户。点击页面右上角游客位置，呼出下拉框，点击登陆跳转至登陆页面，输入用户名和密码，点击登陆按钮即可完成登陆。<br>
+            <p>
+            <div style="width:100%;text-align: center"><img src="static/img/help/1.png" style="width: 80%;"></div>
+            <p class="helpP">
+                <strong>2、项目管理与新建</strong><br>
+            <p>
+            <div style="width:100%;text-align: center"><img src="static/img/help/2.png" style="width: 80%;"></div>
+            <p class="helpP">
+                <strong>3、导入表格数据</strong><br>
+            <p>
+            <div style="width:100%;text-align: center"><img src="static/img/help/3.png" style="width: 80%;"></div>
+            <p class="helpP">
+                <strong>4、在线编辑+导出数据</strong><br>
+            <p>
+            <div style="width:100%;text-align: center"><img src="static/img/help/4.png" style="width: 80%;"></div>
+            <p class="helpP">
+                <strong>5、导出报告+保存数据</strong><br>
+            <p>
+            <div style="width:100%;text-align: center"><img src="static/img/help/5.png" style="width: 80%;"></div>
+            <p class="helpP">
+                <strong>6、注意事项</strong><br>
+                &nbsp;&nbsp;&nbsp;&nbsp;1.本软件提供在线编辑和数据上传，共两种方式编辑柏拉图。<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;2.游客用户无法保存数据到服务器。<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;3.上传excel表格时，请严格按照模板格式编辑数据。<br>
             <p>
         </div>
     </div>
