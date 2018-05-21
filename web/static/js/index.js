@@ -666,10 +666,91 @@ function saveProject(){
     });
     //console.log("save project end:");
 }
+//另存项目
+function saveAsProject() {
+    var saveProjectNameArr = [];//获取所有项目
+    // 获取输入框中的内容
+    var projectName = $('#saveAsProjectNameModal')[0].value;//获取项目名
+    var createDate = new Date().toLocaleDateString() + ',' + new Date().getHours() + ':' + new Date().getMinutes();//获取项目创建时间
+    var memo = $('#saveAsProjectRemarkModal')[0].value;//获取备注
+    var data = {
+        "id": 0,
+        "createDate": createDate,
+        "projectName": projectName,
+        "memo": memo,
+        "appContent": getSerializableData(),
+        "tempProjectID": tempProjectID
+    };
+//获取数据库所有项目名
+    $.ajax({
+        url: "/projectManager/api/v1/project",
+        type: "get",
+        async: false,
+        dataType: "json",
+        success: function (result) {
+            saveProjectNameArr.length = 0;//数组清零
+            result.content.forEach(function (element, index, array) {
+                saveProjectNameArr.push(element.projectName);
+            })
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {//打印错误信息
+            console.log("XMLHttpRequest请求状态码：" + XMLHttpRequest.status);
+            console.log("XMLHttpRequest状态码：" + XMLHttpRequest.readyState);
+            console.log("textStatus是：" + textStatus);
+            console.log("errorThrown是：" + errorThrown);
+        }
+    });
+    //表格添加数据
+    if (projectName === '') {
+        alert("请输入项目名！！！");
+    } else if (saveProjectNameArr.indexOf(projectName) !== -1) {
+        alert("项目已经存在，请重新输入项目名！！！");
+    } else {
+        // 添加数据库
+        $.ajax({
+            type: "post",
+            url: "/projectManager/api/v1/project",
+            data: data,
+            success: function (result) {
+                if (result.state) {
+                    $('.selectList').prepend('<li class="">\n' +
+                    '\t\t\t\t\t<a onclick="sideCheck(' + result.content.id + ',this)">\n' +
+                    '\t\t\t\t\t\t<div>\n' +
+                    '\t\t\t\t\t\t\t<div class="sideProjectLi" onmouseover="this.title = this.innerHTML;">\n' +
+                    '\t\t\t\t\t\t\t\t' + result.content.projectName + '\n' +
+                    '\t\t\t\t\t\t\t</div>\n' +
+                    '\t\t\t\t\t\t\t<div style="position:absolute;bottom:6px;right:5px;">\n' +
+                    '\t\t\t\t\t\t\t\t<i class="ace-icon fa fa-pencil align-top bigger-125 purple" id="checkSideLi" onclick="checkProject(' + result.content.id + ')" data-toggle="modal" data-target="#basicInfo"></i>\n' +
+                    '\t\t\t\t\t\t\t\t<i class="ace-icon fa fa-trash-o bigger-120 red" id="deleteSideLi" onclick="removeProject(' + result.content.id + ')"></i>\n' +
+                    '\t\t\t\t\t\t\t</div>\n' +
+                    '\t\t\t\t\t\t</div>\n' +
+                    '\t\t\t\t\t</a>\n' +
+                    '\t\t\t\t</li>');
+                    //侧边栏高度适应
+                    var height = $(window).get(0).innerHeight;//获取屏幕高度
+                    if ($('#cityList').children('li').length * 36 < height - 310) {
+                        $('.selectList').css('height', $('#cityList').children('li').length * 36);
+                    } else {
+                        $('.selectList').css('height', height - 310);
+                    }
+                    $('#dynamic-table').DataTable().row.add(data).draw(false);
+                }
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {//打印错误信息
+                console.log("XMLHttpRequest请求状态码：" + XMLHttpRequest.status);
+                console.log("XMLHttpRequest状态码：" + XMLHttpRequest.readyState);
+                console.log("textStatus是：" + textStatus);
+                console.log("errorThrown是：" + errorThrown);
+            }
+        });
+        $('#saveAsModal').modal('hide');//隐藏模态框
+        // 在前台添加表格
+    }
+}
 //初始加载函数
 $(function () {
     //alert("document ready!");
-
+    $("#helpModal div.modal-dialog").css("width","60%");
     $("#btnSaveToFile").unbind('click').on("click", saveToFile);
     $("#btnSaveAsPicture").unbind('click').on("click", saveAsPicture);
     $("#btnDrawPareto").unbind('click').on("click", drawPareto);
