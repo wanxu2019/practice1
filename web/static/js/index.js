@@ -116,6 +116,7 @@ var process_wb = (function () {
 
 var problems=[];
 var max_id=0;
+//清空所有数据
 function clearAllData(){
     problems=[];
     max_id=0;
@@ -208,6 +209,7 @@ function doit(type, fn) {
 }
 
 var handle_excel_data_flag = 0;
+//处理导入的excel数据
 function handle_excel_data(data) {
     //console.log("handle_excel_data begin:");
     //两次只处理一次
@@ -237,8 +239,7 @@ function handle_excel_data(data) {
     //console.log(data);
     //console.log("handle_excel_data end;");
 }
-
-//显示“柏拉图”
+//显示帕累托图
 function drawPareto(problem,num1,num2){
     var chart = {
         title: {
@@ -353,6 +354,7 @@ function drawPareto(problem,num1,num2){
 function show(msg) {
     console.log("log:" + msg);
 }
+//模拟一份excel数据
 function mockExcelData(){
     return {
         "Sheet1": [
@@ -407,6 +409,7 @@ function loadDataFromExcel(data){
     }
 }
 var vueObject;
+//在表格中展示数据
 function displayDataInTable(){
     //Vue的方式
     //if(vueObject!=null){
@@ -432,6 +435,7 @@ function displayDataInTable(){
         showTable.bootstrapTable("load",problems);
     }
 }
+//使用帕累托图展示数据
 function displayDataInPareto(){
     //构造插件所需数据格式
     var p=Array();
@@ -561,6 +565,7 @@ function delElements(){
     }
     reDisplay();
 }
+//显示增加元素模态框
 function showAddElementPanel(){
     console.log("添加：");
     $("#myModalLabel").html("添加问题");
@@ -609,6 +614,7 @@ function editElement(){
     $("#input_problem_num").val("");
     reDisplay();
 }
+//保存至文件
 function saveToFile(){
     if(problems.length==0){
         alert("当前项目没有数据，请添加数据后保存");
@@ -626,6 +632,7 @@ function saveToFile(){
     //导出
     doit("xlsx","pareto_data.xlsx");
 }
+//保存为图片
 function saveAsPicture(){
     if(problems.length==0){
         alert("当前项目没有数据，请添加数据后保存");
@@ -636,6 +643,7 @@ function saveAsPicture(){
             window.saveAs(blob, 'pareto_picture.png');
         });
 }
+//保存至云端
 function saveProject(){
     //console.log("save project begin:");
     if(projectId==0){
