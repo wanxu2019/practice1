@@ -100,7 +100,7 @@
                     <span class="menu-icon fa fa-download"></span>下载模板
                 </a>
                 <a type="button" class="btn btn-info file">
-                    <span class="glyphicon glyphicon-upload"></span>文件导入
+                    <span class="glyphicon glyphicon-upload"></span>导入模板
                     <input class="" id="xlf" type="file" name="xlfile"/>
                 </a>
                 <a type="button" class="btn btn-info" id="btnSaveAsPicture">
@@ -110,10 +110,10 @@
                     <span class="glyphicon glyphicon-download"></span>导出文件
                 </a>
                 <a type="button" class="btn btn-info" id="saveAsProject" data-toggle="modal" data-target="#saveAsModal">
-                    <span class="menu-icon fa fa-folder"></span>另存为
+                    <span class="glyphicon glyphicon-log-in"></span>另存为
                 </a>
                 <a type="button" class="btn btn-info" id="saveProject">
-                    <span class="menu-icon fa fa-folder"></span>保存至云
+                    <span class="glyphicon glyphicon-check"></span>保存
                 </a>
             </div>
         <%--柏拉图主体部分--%>
@@ -141,7 +141,7 @@
                                    data-toggle="table"
                                    data-search="true"
                                    data-show-refresh="true"
-                                   data-show-toggle="true"
+                                   data-show-toggle="false"
                                    data-toolbar="#toolbar"
                                    data-pagination="true"
                                    data-page-size=30
@@ -286,10 +286,10 @@
 </body>
 <script type="text/javascript">
     function editFormatter(value, row, index, field) {
-        console.log("value:"+value);
-        console.log("row:"+row);
-        console.log("index:"+index);
-        console.log("field:"+field);
+//        console.log("value:"+value);
+//        console.log("row:"+row);
+//        console.log("index:"+index);
+//        console.log("field:"+field);
         return "<a class=\"edit ml10\" href=\"javascript:showEditElementPanel("+value+")\" title=\"Edit\"><i class=\"glyphicon glyphicon-edit\"></i> 编辑</a>";
     }
 //    $('#table').bootstrapTable({

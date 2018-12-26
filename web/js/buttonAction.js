@@ -2,7 +2,7 @@ var projectId = 0;//项目Id
 var projectName;//项目名
 var appResult = null;//word报告
 var appName = "pareto";//将demo改为app名称，与数据库中表名字一致（必填）
-var appNameChinese = '柏拉图';//app中文名（必填）
+var appNameChinese = '帕累托图';//app中文名（必填）
 var USER_NAME = '';//当前登录用户名
 
 // 添加项目后，自定义操作
@@ -11,8 +11,9 @@ function addSelfDefine(result) {
     /*
     * your code.....
     **/
-    $('a[onclick="sideCheck('+result.content.id+',this)"]').trigger("click");
-    console.log("add project successful");
+    //$('a[onclick="sideCheck('+result.content.id+',this)"]').trigger("click");
+    $('div[onclick="sideCheck('+result.content.id+',this)"]').trigger("click");
+    //console.log("add project successful");
 }
 
 // 查看项目后，自定义操作
@@ -23,8 +24,9 @@ function checkSelfDefine(node, result) {
     **/
     $('#mainFunction').trigger('click');
     initCustomText();
-    console.log("appContent:"+result.content.appContent);
-    console.log("appResult:"+result.content.appResult);
+    //console.log("appContent:"+result.content.appContent);
+    //console.log("appResult:"+result.content.appResult);
+    projectName=result.content.projectName;
     try{
         problems=JSON.parse(result.content.appContent);
         //设置max_id
@@ -32,7 +34,7 @@ function checkSelfDefine(node, result) {
             max_id=max(max_id,problems[i].id);
         }
     }catch(e){
-        console.log(e);
+        //console.log(e);
         problems=[];
     }
     if(problems.length>0){
@@ -42,7 +44,7 @@ function checkSelfDefine(node, result) {
         //没有数据就清空所有图表
         hideDisplayElements();
     }
-    console.log("check project successful");
+    //console.log("check project successful");
 }
 
 //删除项目后，自定义操作
@@ -51,16 +53,41 @@ function removeSelfDefine(result) {
     /*
     * your code.....
     **/
-    $($('a[onclick^="sideCheck("]')[0]).trigger("click");
-    console.log("remove project successful");
+    //$($('a[onclick^="sideCheck("]')[0]).trigger("click");
+    //$($('div[onclick^="sideCheck("]')[0]).trigger("click");
+    //同步保存当前项目数据
+    $.ajax({
+        url:"/projectManager/api/v1/project",
+        type:"put",
+        async:false,
+        //群组ID
+        data:{
+            id:projectId,
+            appName:appName,
+            //appResult:$("#WYeditor").html(),
+            appContent:getSerializableData()
+        },
+        success:function(result){
+            if(result.state){
+                //请求正确
+                //console.log(result.content);
+                show("数据保存成功");
+            }else{
+                //请求错误
+                //console.log(result.error);
+                show("数据保存失败："+result.error);
+            }
+        }
+    });
+    //console.log("remove project successful");
 }
 var customText = {//word编辑区自定义文本内容
-    'title': "<h2>1 柏拉图App分析结果 </h2>",
+    'title': "<h2>1 帕累托图App分析结果 </h2>",
     'img':""
 };
 function initCustomText(){
     customText = {//word编辑区自定义文本内容
-        'title': "<h2>1 柏拉图App分析结果 </h2>",
+        'title': "<h2>1 帕累托图App分析结果 </h2>",
         'img': ""
     };
 }
@@ -91,7 +118,7 @@ function setCustomContext() {
         }
     }
     catch(e){
-        console.log("初始化报告失败");
+        //console.log("初始化报告失败");
     }
     //custom code end
 }

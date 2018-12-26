@@ -14,10 +14,33 @@ function max(x1,x2){
 function min(x1,x2){
     return x1<x2?x1:x2;
 }
-
+// 对Date的扩展，将 Date 转化为指定格式的String
+// 月(M)、日(d)、小时(h)、分(m)、秒(s)、季度(q) 可以用 1-2 个占位符，
+// 年(y)可以用 1-4 个占位符，毫秒(S)只能用 1 个占位符(是 1-3 位的数字)
+// 例子：
+// (new Date()).Format("yyyy-MM-dd hh:mm:ss.S") ==> 2006-07-02 08:09:04.423
+// (new Date()).Format("yyyy-M-d h:m:s.S")      ==> 2006-7-2 8:9:4.18
+Date.prototype.Format = function (fmt) { //author: meizz
+    var o = {
+        "M+": this.getMonth() + 1, //月份
+        "d+": this.getDate(), //日
+        "h+": this.getHours(), //小时
+        "m+": this.getMinutes(), //分
+        "s+": this.getSeconds(), //秒
+        "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+        "S": this.getMilliseconds() //毫秒
+    };
+    if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+    for (var k in o)
+        if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+    return fmt;
+}
+function getTimeNow(){
+    return new Date().Format("yyyy-MM-dd hh-mm-ss");
+}
 //draw.js内容End
 function saveDataToProjectManager(){
-    console.log("saveDataToProjectManager:");
+    //console.log("saveDataToProjectManager:");
 
 }
 /*jshint browser:true */
@@ -223,13 +246,13 @@ function handle_excel_data(data) {
         default :
             break;
     }
-    console.log(data);
+    //console.log(data);
     data = JSON.parse(data);
     //加载
     loadDataFromExcel(data);
     //显示表格
     displayDataInTable();
-    //显示柏拉图
+    //显示帕累托图
     displayDataInPareto();
     //清除状态
     var xlf = document.getElementById('xlf');
@@ -272,7 +295,7 @@ function drawPareto(problem,num1,num2){
                 tickPositioner: function() {
                     var positions = [0];
                     var increment = Math.ceil(this.dataMax/5);
-                    for(var i=0;i<6;i++){
+                    for(var i=0;i<5;i++){
                         positions.push(positions[i]+increment);
                     }
                     return positions;
@@ -300,15 +323,15 @@ function drawPareto(problem,num1,num2){
                 opposite: true,
                 //tickPixelInterval:10,
                 tickPositioner: function() {
-                    var positions = [0,20,40,60,80,100,120];
+                    var positions = [0,20,40,60,80,100];
                     return positions;
                 }
             },
         ],
         legend: {
             layout: 'vertical',
-            align: 'right',
-            verticalAlign: 'middle',
+            align: 'center',
+            verticalAlign: 'bottom',
             borderWidth: 0
         },
         series: [
@@ -334,7 +357,7 @@ function drawPareto(problem,num1,num2){
     $('#paretoDiv').highcharts(chart,function(){
         //等500ms渲染完成后保存图片
         setTimeout(function(){
-            console.log("begin to save image");
+            //console.log("begin to save image");
             //画完图后需要临时存储起来以供word使用
             if(customText!=undefined){
                 domtoimage.toPng(document.getElementById('paretoDiv'))
@@ -352,7 +375,7 @@ function drawPareto(problem,num1,num2){
     });
 }
 function show(msg) {
-    console.log("log:" + msg);
+    //console.log("log:" + msg);
 }
 //模拟一份excel数据
 function mockExcelData(){
@@ -469,9 +492,11 @@ function displayDataInPareto(){
     }
     for(i=0;i< n.length;i++){
         if(i>0) {
-            n2.push(n[i] / parseFloat(sum) * 100 + n2[i - 1]);
+            var x=Number(n[i] / parseFloat(sum) * 100 + n2[i - 1]);
+            n2.push(Number(x.toFixed(2)));
         }else{
-            n2.push(n[i] / parseFloat(sum) * 100);
+            var x=Number(n[i] / parseFloat(sum) * 100);
+            n2.push(Number(x.toFixed(2)));
         }
     }
     //画图
@@ -509,6 +534,17 @@ function addElement(){
         alert("问题数量不符合规范，请检查后重新输入");
         return ;
     }
+    if(name.length>20){
+        alert("问题长度不可超过20，请检查后重新输入");
+        $("#input_problem_name").val(name.substring(0,20));
+        return ;
+    }
+    for(var i=0;i<problems.length;i++){
+        if(name==problems[i].name){
+            alert("问题名称已存在，请检查后重新输入");
+            return ;
+        }
+    }
     max_id+=1;
     problems.push({
         "id":max_id,
@@ -526,9 +562,9 @@ function addElement(){
 function reDisplay(){
     //删除之后重绘表格
     displayDataInTable();
-    //删除之后柏拉图也需要重绘
+    //删除之后帕累托图也需要重绘
     displayDataInPareto();
-    //如果元素删完了，就连表格和柏拉图都不画了
+    //如果元素删完了，就连表格和帕累托图都不画了
     if(problems.length==0){
         hideDisplayElements();
     }
@@ -567,7 +603,7 @@ function delElements(){
 }
 //显示增加元素模态框
 function showAddElementPanel(){
-    console.log("添加：");
+    //console.log("添加：");
     $("#myModalLabel").html("添加问题");
     $("#btnAdd").css("display","");
     $("#btnEdit").css("display","none");
@@ -630,7 +666,7 @@ function saveToFile(){
         $("#exportTable tbody tr:nth-child(" + (i + 1) + ")").append("<td>" + problems[i].num + "</td>");
     }
     //导出
-    doit("xlsx","pareto_data.xlsx");
+    doit("xlsx",projectName+"_pareto_"+getTimeNow()+".xlsx");
 }
 //保存为图片
 function saveAsPicture(){
@@ -640,7 +676,7 @@ function saveAsPicture(){
     }
     domtoimage.toBlob(document.getElementById('paretoDiv'), { bgcolor: "#ffffff" })
         .then(function (blob) {
-            window.saveAs(blob, 'pareto_picture.png');
+            window.saveAs(blob,projectName+ '_pareto_'+getTimeNow()+'.png');
         });
 }
 //保存至云端
@@ -663,11 +699,11 @@ function saveProject(){
         success:function(result){
             if(result.state){
                 //请求正确
-                console.log(result.content);
+                //console.log(result.content);
                 alert("数据保存成功");
             }else{
                 //请求错误
-                console.log(result.error);
+                //console.log(result.error);
                 alert("数据保存失败："+result.error);
             }
         }
@@ -702,10 +738,10 @@ function saveAsProject() {
             })
         },
         error: function (XMLHttpRequest, textStatus, errorThrown) {//打印错误信息
-            console.log("XMLHttpRequest请求状态码：" + XMLHttpRequest.status);
-            console.log("XMLHttpRequest状态码：" + XMLHttpRequest.readyState);
-            console.log("textStatus是：" + textStatus);
-            console.log("errorThrown是：" + errorThrown);
+            //console.log("XMLHttpRequest请求状态码：" + XMLHttpRequest.status);
+            //console.log("XMLHttpRequest状态码：" + XMLHttpRequest.readyState);
+            //console.log("textStatus是：" + textStatus);
+            //console.log("errorThrown是：" + errorThrown);
         }
     });
     //表格添加数据
@@ -745,10 +781,10 @@ function saveAsProject() {
                 }
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {//打印错误信息
-                console.log("XMLHttpRequest请求状态码：" + XMLHttpRequest.status);
-                console.log("XMLHttpRequest状态码：" + XMLHttpRequest.readyState);
-                console.log("textStatus是：" + textStatus);
-                console.log("errorThrown是：" + errorThrown);
+                //console.log("XMLHttpRequest请求状态码：" + XMLHttpRequest.status);
+                //console.log("XMLHttpRequest状态码：" + XMLHttpRequest.readyState);
+                //console.log("textStatus是：" + textStatus);
+                //console.log("errorThrown是：" + errorThrown);
             }
         });
         $('#saveAsModal').modal('hide');//隐藏模态框
@@ -779,6 +815,10 @@ $(function () {
             problems: []
         }
     });
+    //模拟点击第一项
+    setTimeout(function(){
+        $($('div[onclick^="sideCheck("]')[0]).trigger("click");
+    },500);
     //loadDataFromExcel(mockExcelData());
     //displayDataInPareto();
     //displayDataInTable();

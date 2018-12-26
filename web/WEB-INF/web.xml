@@ -7,4 +7,31 @@
     <welcome-file-list>
         <welcome-file>index.jsp</welcome-file>
     </welcome-file-list>
+    <!--填写项目名，比方说鱼骨图，直方图等-->
+    <display-name>帕累托图</display-name>
+    <!--填写属性标签，为集成与融合做准备-->
+    <context-param>
+        <param-name>webAppAttributeLabel</param-name>
+        <param-value>绘图工具；帕累托图</param-value>
+    </context-param>
+    <!--功能描述，描述软件的主要功能-->
+    <context-param>
+        <param-name>webAppDescription</param-name>
+        <param-value>这是一种绘图工具，用于分析问题对结果影响的大小。</param-value>
+    </context-param>
+    <!--webApp图标，从静态资源中选择图片，将图片单独发给我-->
+    <context-param>
+        <param-name>webAppIcon</param-name>
+        <param-value>帕累托图.png</param-value>
+    </context-param>
+    <!--webApp版本号，当前软件版本迭代次数-->
+    <context-param>
+        <param-name>webAppVersion</param-name>
+        <param-value>v2.0</param-value>
+    </context-param>
+    <!--webApp分类，从知识工程、TRIZ、质量分析、企业管理、产品设计、创新思维、其他选择一项-->
+    <context-param>
+        <param-name>webAppCategory</param-name>
+        <param-value>质量分析</param-value>
+    </context-param>
 </web-app>
